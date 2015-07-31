@@ -5,7 +5,7 @@ namespace TextRecognition
     class NeuralNetwork
     {
         private double[] weights;
-        private string name;
+        public string name;
 
         public NeuralNetwork(string name1)
         {
@@ -21,7 +21,7 @@ namespace TextRecognition
                 readWeights();
         }
 
-        public double think(ref byte[] input)
+        public double think(byte[] input)
         {
             double outp = 0;
             for (int i = 0; i < 100; i++)
@@ -31,7 +31,7 @@ namespace TextRecognition
             return outp;
         }
 
-        public void adjust(ref byte[] input)
+        public void adjust(byte[] input)
         {
             for (int i = 0; i < 100; i++)
             {
