@@ -2,6 +2,7 @@
 #include "Neuron.h"
 #include <cmath>
 #include <cstdlib>
+#include <algorithm>
 
 #define TRAIN 0
 #define RUN 1
@@ -19,6 +20,7 @@ int main()
 
 	brain->Add(gcnew Neuron(%String("A")));
 	brain->Add(gcnew Neuron(%String("B")));
+	brain->Add(gcnew Neuron(%String("C")));
 
 	unsigned int minus = 0;
 	for (unsigned char i = 0; i < brain->Count; i++)
@@ -38,20 +40,20 @@ int main()
 #if TRAIN
 	double rating;
 
-	for (unsigned int k = 0; k < 2000000; k++)
+	for (unsigned int k = 0; k < 1000000; k++)
 	{
-		for (unsigned char i = 0; i < 8; i++)
+		for (unsigned char i = 16; i < count; i++)
 		{
-			rating = brain[0]->think(letters[i]);
+			rating = brain[2]->think(letters[i]);
 			if (round(rating - 0.5) != 1)
-				brain[0]->adjust(letters[i]);
+				brain[2]->adjust(letters[i]);
 		}
 
 		if (k % 100000 == 0)
 		{
-			for (unsigned char i = 0; i < 8; i++)
+			for (unsigned char i = 17; i < count; i++)
 			{
-				Console::WriteLine(brain[0]->think(letters[i]));
+				Console::WriteLine(brain[2]->think(letters[i]));
 			}
 			Console::WriteLine();
 		}
@@ -61,7 +63,7 @@ int main()
 	String^ input = Console::ReadLine();
 	if (input == "y")
 	{
-		brain[0]->writeWeights();
+		brain[2]->writeWeights();
 	}
 #endif
 
@@ -70,18 +72,26 @@ int main()
 		String^ letter;
 		unsigned int randomNumber = std::rand() % (count);
 
-		double valA = brain[0]->think(letters[randomNumber]);
-		double valB = brain[1]->think(letters[randomNumber]);
+		const double valA = brain[0]->think(letters[randomNumber]);
+		const double valB = brain[1]->think(letters[randomNumber]);
+		const double valC = brain[2]->think(letters[randomNumber]);
 
 		writeImage(letters[randomNumber]);
 
-		if (abs(valA - 1) < abs(valB - 1))
-			letter = "A";
-		else
-			letter = "B";
+		double min = std::min({abs(valA - 1), abs(valB - 1), abs(valC - 1)});
 
+		if		(min == abs(valA - 1))
+			letter = "A";
+		else if (min == abs(valB - 1))
+			letter = "B";
+		else if (min == abs(valC - 1))
+			letter = "C";
+		else
+			letter = "3";
+
+		Console::WriteLine("The letter is " + letter);
+		Console::WriteLine();
 		Console::WriteLine("retry?");
-		Console::WriteLine(letter);
 		String^ input = Console::ReadLine();
 		if (input == "y")
 		{

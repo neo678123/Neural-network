@@ -30,7 +30,7 @@ void Neuron::adjust(List<unsigned char>^ in)
 {
 	for (unsigned char i = 0; i < 100; i++)
 	{
-		weights[i] += (in[i] == 1) ? 0.000025 : -0.000025;
+		weights[i] += (in[i] == 1) ? 0.00000025 : -0.00000025;
 	}
 }
 
@@ -59,6 +59,7 @@ void Neuron::readWeights()
 		weights[count] = Double::Parse(line);
 		count++;
 	}
+	file->Close();
 }
 
 List<unsigned char>^ Neuron::imageToBitArray(String^% path)
